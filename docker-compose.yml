@@ -1,0 +1,33 @@
+version: "3.8"
+
+services:
+  sia-manager-mongodb-container:
+    image: mongo:latest
+    env_file: ./.env
+    environment:
+        - MONGO_INITDB_ROOT_USERNAME=$MONGODB_USER
+        - MONGO_INITDB_ROOT_PASSWORD=$MONGODB_PASSWORD
+    ports:
+      - $MONGODB_LOCAL_PORT:$MONGODB_DOCKER_PORT
+  sia-manager:
+    depends_on:
+      - sia-manager-mongodb-container
+    #image: sia-manager-mongodb:1.0
+    build: ./backend
+      #context: .
+      #dockerfile: Dockerfile
+    env_file: ./.env
+    ports:
+      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+    environment:
+      #SPRING_APPLICATION_JSON: '{"spring.data.mongodb.uri" : "mongodb://$MONGODB_USER:$MONGODB_PASSWORD@mongo_db:$MONGODB_DOCKER_PORT/$MONGODB_DATABASE"}'
+      SPRING_APPLICATION_JSON: '{
+          "spring.data.mongodb.uri" : "mongodb://$MONGODB_USER:$MONGODB_PASSWORD@sia-manager-mongodb-container:$MONGODB_DOCKER_PORT/$MONGODB_DATABASE?authSource=admin"
+        }'
+    volumes:
+      - .m2:/root/.m2
+    stdin_open: true
+    tty: true
+
+volumes:
+  db:
