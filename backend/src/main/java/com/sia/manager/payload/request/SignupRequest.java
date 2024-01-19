@@ -1,5 +1,6 @@
 package com.sia.manager.payload.request;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -20,6 +21,8 @@ public class SignupRequest {
     private String password;
 
     @Size(max = 50)
+    @NotBlank
+    @Email
     private String email;
 
     private Set<String> roles;
