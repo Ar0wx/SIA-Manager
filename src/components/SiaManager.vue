@@ -10,7 +10,7 @@
 import LoginComponent from "@/components/LoginComponent.vue";
 
 export default {
-  name: "App",
+  name: "SiaManager",
   components: { LoginComponent, },
   data() {
     return {
